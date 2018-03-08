@@ -38,6 +38,10 @@ stop_words = set(stopwords.words('english'))
 total_filtered_corpora = [w for w in total_words_corpora if not w in stop_words]
 filtered_corpora = [w for w in total_set_corpora if not w in stop_words]
 
+stemmer = nltk.stem.PorterStemmer()
+stemmed_corpora = [stemmer.stem(w) for w in filtered_corpora]
+stemmed_corpora = set(stemmed_corpora)
+
 print 'Total words in all abstracts:'
 print len(total_words_corpora)
 print 'Total words in all abstracts with filtered stopwords:'
@@ -49,7 +53,7 @@ print len(filtered_corpora)
 
 print 'Now saving corpora...'
 with open(data_folder + 'corpora.pickle', 'wb') as file:
-    pickle.dump(filtered_corpora, file)
+    pickle.dump(stemmed_corpora, file)
 
 
 
