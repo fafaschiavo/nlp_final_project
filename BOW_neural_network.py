@@ -19,10 +19,15 @@ from tflearn.data_utils import to_categorical, pad_sequences
 
 print '------------ Lets try a neural network with BOW data ------------'
 
-testing_set = 30
-links_fraction = 0.01
+testing_set = 1000
+links_fraction = 0.5
 data_folder = 'data/'
+models_folder = 'models/'
+
+number_of_epochs = 5
+
 edges_df = pd.read_csv(data_folder + 'training_set.txt', sep = ' ', names = ["nodeID1", "nodeID2", "is_linked"])
+testing_edges_df = pd.read_csv(data_folder + 'training_set.txt', sep = ' ', names = ["nodeID1", "nodeID2", "is_linked"])
 nodes_df = pd.read_csv(data_folder + 'node_information.csv', names = ["nodeID", "year", "title", "author", "journal", "abstract"])
 
 with open(data_folder + 'corpora.pickle', 'rb') as file:
@@ -81,10 +86,10 @@ network = regression(network, optimizer='adam', learning_rate=0.001,
                      loss='categorical_crossentropy', name='target')
 # Training
 model = tflearn.DNN(network, tensorboard_verbose=0)
-model.fit(train_X, train_Y, n_epoch = 5, shuffle=True, validation_set=(test_X, test_Y), show_metric=True, batch_size=32)
+model.fit(train_X, train_Y, n_epoch = number_of_epochs, shuffle=True, validation_set=(test_X, test_Y), show_metric=True, batch_size=64)
 
 
-
+model.save(models_folder + 'bow_concat_epochs' + str(number_of_epochs) + '.tflearn')
 
 
 
